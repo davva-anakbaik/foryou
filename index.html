@@ -82,6 +82,7 @@
     box-shadow:0 8px 20px rgba(40,20,30,0.06);
     transition:transform .18s ease, box-shadow .18s ease;
     user-select:none;
+    border: none;
   }
   .tile:hover{ transform:translateY(-6px); box-shadow:0 18px 30px rgba(40,20,30,0.08) }
   .tile .icon{font-size:28px}
@@ -222,39 +223,13 @@ Jadi yaa, anggap aja ini intro dari seseorang yang pengen kenal kak syaa bukan b
 
 Oh ya, dava juga pengen denger apapun dari kak syaa, entah itu cerita random dari kak syaa, ataupun kalau kak syaa mau sharing cerita hidupnyaa kak syaa jugaa gapapa, dava jugaa bisa kok jadi pendengar yang baik buat kak syaa ceritaa nantii 😁
 Okaayy dehh kak syaa, hanya ituu yang pengen dava sampaikan ke kak syaa, tunggu davaa yaa kakk, davaa akan pasti datang buat ketemu sama kak syaa, see u kakk 😉`,
-  // gunakan track piano yang ditemukan
   accentColor: '#ff6b9a'
 };
 
-/* ... kode lainnya tidak berubah ... */
-
-function celebrateSuccess(btn){
-  // ... efek confetti dan animasi lainnya ...
-
-  // play piano (dipanggil setelah puzzle berhasil)
-  piano.volume = 0.55;
-  piano.currentTime = 0;
-  const playPromise = piano.play();
-  if (playPromise !== undefined) {
-    playPromise.catch(() => {
-      // jika browser belum memperbolehkan autoplay,
-      // pemutaran akan menunggu interaksi tambahan dari user
-      console.warn("Autoplay piano gagal. Butuh interaksi pengguna.");
-    });
-  }
-
-  // kemudian muncul panel hadiah & pesan
-  // ... sisa kode reveal panel ...
+/* Register GSAP TextPlugin properly */
+if (window.TextPlugin) {
+  gsap.registerPlugin(TextPlugin);
 }
-
-
-/* ===================================
-   = Minimal helper & initial styling =
-   =================================== */
-document.documentElement.style.setProperty('--accent', CONFIG.accentColor);
-
-/* Register GSAP TextPlugin if available */
-gsap.registerPlugin(window.TextPlugin);
 
 /* =========================
    = Puzzle grid generation =
@@ -262,7 +237,6 @@ gsap.registerPlugin(window.TextPlugin);
 const gridEl = document.getElementById('grid');
 const total = CONFIG.gridCount;
 const icons = ['🌸','✨','🌟','🍃','🎀','🍥','🌼','🕊️','🍬','🌈','⭐','💠']; // decoys
-// We'll ensure exactly one heart '❤️' is present as the correct tile.
 
 function mkTile(content, idx){
   const d = document.createElement('button');
@@ -304,7 +278,6 @@ setupGrid();
    ============================ */
 
 const piano = document.getElementById('piano');
-piano.src = CONFIG.pianoURL;
 
 let solved = false;
 let confettiInterval = null;
@@ -327,7 +300,6 @@ function onTileClick(e){
 
 function celebrateSuccess(btn){
   // subtle focus on the correct tile then expand
-  const rect = btn.getBoundingClientRect();
   gsap.to(btn, { scale: 1.12, duration: 0.25, ease: "power2.out" });
 
   // confetti spawn
@@ -410,7 +382,8 @@ document.getElementById('shareBtn').addEventListener('click', () => {
   extra.style.fontSize='13px';
   extra.style.color='#6b4654';
   extra.style.opacity=0;
-  extra.innerHTML = ;
+  // valid innerHTML string (previously was empty/invalid which caused a syntax error)
+  extra.innerHTML = 'Tambahan kecil: davaa ngirim virtual hug 💌';
   messageEl.appendChild(extra);
   gsap.to(extra, {autoAlpha:1, y:-4, duration:0.6, ease:"power2.out"});
 });
@@ -455,8 +428,3 @@ window.addEventListener('beforeunload', () => {
 </script>
 </body>
 </html>
-
-
-
-
-
